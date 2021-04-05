@@ -19,11 +19,8 @@ var (
 	threshold       float64
 	weightsNum      []float64
 	alfa            float64
-	dimension       int
 	desireAccurancy float64
 )
-
-// Activation function
 
 type Object struct {
 	Params []float64
@@ -38,7 +35,6 @@ type Objects struct {
 func init() {
 	flag.StringVar(&trainFile, "tr", trainFile, "train-file")
 	flag.StringVar(&testFile, "ts", testFile, "test-file")
-	flag.IntVar(&dimension, "d", dimension, "dimension")
 	flag.Float64Var(&desireAccurancy, "acc", desireAccurancy, "Desire accurancy")
 	flag.StringVar(&weightsString, "w", weightsString, "weights in form [val1,val2,valN]")
 	flag.Float64Var(&threshold, "t", threshold, "threshold")
@@ -73,17 +69,16 @@ func convertStrArrayToJson(records [][]string) string {
 	// Converting from array of string to JSON
 	jsonData := ""
 	strNum := 0
+	dimension := len(records[1]) - 1
 	for _, record := range records {
 		wrongStr := false
 		if len(record) < dimension || len(record) > dimension+1 {
 			fmt.Println("Wrong parameters count")
 			wrongStr = true
 		}
-		var objName string
-		if len(record) == dimension+1 {
-			objName = record[len(record)-1] // Cutting Object name
-			record = record[:len(record)-1]
-		}
+		// var objName string
+		objName := record[len(record)-1] // Cutting Object name
+		record = record[:len(record)-1]
 		strNum++
 		stringArray := "["                // Opening sq bracket
 		for _, arrField := range record { // Filling string representation of array
